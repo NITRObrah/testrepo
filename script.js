@@ -6,7 +6,7 @@ const store = {
   set: (key, val) => { try { localStorage.setItem(key, val); } catch(e) {} }
 };
 
-// Full Games Data
+// Games - copy paste from games.json
 const gamesData = [
   { "name": "1v1lol", "image": "logo.png", "url": "1v1lol" },
   { "name": "1v1space", "image": "splash.png", "url": "1v1space" },
@@ -305,272 +305,51 @@ const gamesData = [
 
 const GAME_BASE = 'https://gms.parcoil.com';
 
-// Cloak Config
+// Cloak config
 const cloakConfig = {
-  default: { title: 'Opium Bird', favicon: 'https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png' },
+  default: { title: 'sight.w', favicon: 'https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png' },
   canvas: { title: 'Canvas LMS', favicon: 'https://canvas.instructure.com/favicon.ico' },
   google: { title: 'Google', favicon: 'https://www.google.com/favicon.ico' },
   drive: { title: 'Google Drive', favicon: 'https://drive.google.com/favicon.ico' }
 };
 
-let currentGame = null;
+let currentGameUrl = '';
 
-// Initialize
+// Init
 document.addEventListener('DOMContentLoaded', () => {
-  initLoading();
-  initParticles();
-  initTime();
-  initNav();
-  initGames();
-  initSettings();
   initTheme();
   initCloak();
-  initKeyboard();
+  initSettings();
+  initGames();
+  initNav();
+  initKeys();
   initStats();
-  initModals();
-});
-
-// Loading Screen
-function initLoading() {
-  let progress = 0;
-  const loadingBar = $('loadingBar');
-  
-  const interval = setInterval(() => {
-    progress += Math.random() * 15;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(interval);
-      setTimeout(() => $('loadingScreen').classList.add('hidden'), 300);
-    }
-    loadingBar.style.width = progress + '%';
-  }, 100);
-}
-
-// Particles
-function initParticles() {
-  const container = $('particles');
-  const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d'];
-  
-  for (let i = 0; i < 20; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.width = (2 + Math.random() * 4) + 'px';
-    particle.style.height = particle.style.width;
-    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-    particle.style.animationDelay = Math.random() * 15 + 's';
-    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-    container.appendChild(particle);
-  }
-}
-
-// Time
-function initTime() {
-  function updateTime() {
-    const now = new Date();
-    $('time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    $('date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-  }
   updateTime();
   setInterval(updateTime, 1000);
-}
+  setTimeout(() => $('loadingScreen').classList.add('hidden'), 1200);
+});
 
-// Navigation
-function initNav() {
-  const dockItems = $all('.dock-item');
-  const pages = $all('.page');
-  
-  dockItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const pageName = item.dataset.page;
-      
-      // Update dock
-      dockItems.forEach(d => d.classList.remove('active'));
-      item.classList.add('active');
-      
-      // Show page
-      pages.forEach(p => p.classList.remove('active'));
-      $(pageName + 'Page').classList.add('active');
-      
-      // Reset games view
-      if (pageName === 'games') {
-        showGamesMenu();
-      }
-      
-      // Load movies iframe
-      if (pageName === 'movies') {
-        const iframe = $('moviesIframe');
-        if (!iframe.src) iframe.src = 'https://www.fmovies.gd/home';
-      }
-    });
-  });
-}
-
-function navigateTo(page) {
-  const dockItem = document.querySelector(`.dock-item[data-page="${page}"]`);
-  if (dockItem) dockItem.click();
-}
-
-// Games
-function initGames() {
-  renderGamesGrid();
-  
-  // Search
-  $('gamesSearchInput').addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase();
-    $all('.game-tile').forEach(tile => {
-      const name = tile.dataset.name.toLowerCase();
-      tile.style.display = name.includes(query) ? '' : 'none';
-    });
-  });
-  
-  // First Games Button
-  $('firstGamesBtn').addEventListener('click', () => {
-    $('gamesMenu').style.display = 'none';
-    $('firstGamesView').classList.add('active');
-    const iframe = $('firstGamesIframe');
-    if (!iframe.src) iframe.src = 'https://tight-breeze-9313.brayyy316.workers.dev/';
-  });
-  
-  // Second Games Button
-  $('secondGamesBtn').addEventListener('click', () => {
-    $('gamesMenu').style.display = 'none';
-    $('secondGamesView').classList.add('active');
-  });
-  
-  // Back buttons
-  $('firstGamesBack').addEventListener('click', showGamesMenu);
-  $('gamePlayerBack').addEventListener('click', () => {
-    $('gamePlayerView').classList.remove('active');
-    $('secondGamesView').classList.add('active');
-    $('gamePlayerIframe').src = '';
-  });
-  
-  // Reload buttons
-  $('firstGamesReload').addEventListener('click', () => {
-    $('firstGamesIframe').src = $('firstGamesIframe').src;
-  });
-  
-  $('moviesReload').addEventListener('click', () => {
-    $('moviesIframe').src = $('moviesIframe').src;
-  });
-  
-  $('gamePlayerReload').addEventListener('click', () => {
-    $('gamePlayerIframe').src = $('gamePlayerIframe').src;
-    $('gamePlayerLoading').classList.remove('hidden');
-  });
-  
-  // Embed button
-  $('gamePlayerEmbed').addEventListener('click', () => {
-    $('embedModal').classList.add('active');
-    $('embedCode').value = `<iframe src="${GAME_BASE}/${currentGame}/" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
-  });
-  
-  // Iframe load
-  $('gamePlayerIframe').addEventListener('load', () => {
-    setTimeout(() => $('gamePlayerLoading').classList.add('hidden'), 500);
-  });
-}
-
-function showGamesMenu() {
-  $('gamesMenu').style.display = '';
-  $('firstGamesView').classList.remove('active');
-  $('secondGamesView').classList.remove('active');
-  $('gamePlayerView').classList.remove('active');
-  $('firstGamesIframe').src = '';
-}
-
-function renderGamesGrid() {
-  const grid = $('gamesGrid');
-  grid.innerHTML = gamesData.map(game => `
-    <div class="game-tile" data-name="${game.name}" data-url="${game.url}">
-      <img src="${GAME_BASE}/${game.url}/${game.image}" alt="${game.name}" loading="lazy" onerror="this.style.display='none'">
-      <div class="game-name">${game.name}</div>
-    </div>
-  `).join('');
-  
-  $all('.game-tile').forEach(tile => {
-    tile.addEventListener('click', () => {
-      currentGame = tile.dataset.url;
-      $('gamePlayerTitle').textContent = tile.dataset.name;
-      $('secondGamesView').classList.remove('active');
-      $('gamePlayerView').classList.add('active');
-      $('gamePlayerLoading').classList.remove('hidden');
-      $('gamePlayerIframe').src = `${GAME_BASE}/${currentGame}/`;
-    });
-  });
-}
-
-// Settings
-function initSettings() {
-  // FPS Booster
-  const fpsBooster = store.get('fpsBooster') !== 'false';
-  $('toggleFpsBooster').classList.toggle('on', fpsBooster);
-  document.body.classList.toggle('fps-boost', fpsBooster);
-  
-  $('toggleFpsBooster').addEventListener('click', () => {
-    const on = $('toggleFpsBooster').classList.toggle('on');
-    document.body.classList.toggle('fps-boost', on);
-    store.set('fpsBooster', on);
-  });
-  
-  // Stats
-  const stats = store.get('showStats') === 'true';
-  $('toggleStats').classList.toggle('on', stats);
-  $('statsOverlay').classList.toggle('visible', stats);
-  
-  $('toggleStats').addEventListener('click', () => {
-    const on = $('toggleStats').classList.toggle('on');
-    $('statsOverlay').classList.toggle('visible', on);
-    store.set('showStats', on);
-  });
-  
-  // Blur
-  const blur = store.get('blur') !== 'false';
-  $('toggleBlur').classList.toggle('on', blur);
-  
-  $('toggleBlur').addEventListener('click', () => {
-    const on = $('toggleBlur').classList.toggle('on');
-    store.set('blur', on);
-  });
-  
-  // Bypass buttons
-  $('aboutBlankBtn').addEventListener('click', () => {
-    const win = window.open('about:blank', '_blank');
-    if (win) {
-      win.document.write(`<!DOCTYPE html><html><head><title>Classroom</title></head><body style="margin:0"><iframe src="${location.href}" style="width:100%;height:100vh;border:none"></iframe></body></html>`);
-      win.document.close();
-    }
-  });
-  
-  $('panicBtn').addEventListener('click', triggerPanic);
-}
-
-// Theme
 function initTheme() {
   const theme = store.get('theme') || 'dark';
   document.body.setAttribute('data-theme', theme);
-  
+  updateThemeBtns(theme);
   $all('.theme-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.theme === theme);
-    
     btn.addEventListener('click', () => {
       document.body.setAttribute('data-theme', btn.dataset.theme);
       store.set('theme', btn.dataset.theme);
-      $all('.theme-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      updateThemeBtns(btn.dataset.theme);
     });
   });
 }
 
-// Cloak
+function updateThemeBtns(active) {
+  $all('.theme-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.theme === active));
+}
+
 function initCloak() {
   const cloak = store.get('cloak') || 'default';
   applyCloak(cloak);
-  
   $all('.cloak-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.cloak === cloak);
-    
     btn.addEventListener('click', () => {
       applyCloak(btn.dataset.cloak);
       store.set('cloak', btn.dataset.cloak);
@@ -581,73 +360,246 @@ function initCloak() {
 }
 
 function applyCloak(cloak) {
-  const config = cloakConfig[cloak];
-  if (config) {
-    document.title = config.title;
-    let favicon = document.querySelector('link[rel="icon"]');
-    if (!favicon) {
-      favicon = document.createElement('link');
-      favicon.rel = 'icon';
-      document.head.appendChild(favicon);
-    }
-    favicon.href = config.favicon;
+  const c = cloakConfig[cloak];
+  if (c) {
+    document.title = c.title;
+    const link = document.createElement('link');
+    link.id = 'favicon';
+    link.rel = 'icon';
+    link.href = c.favicon;
+    document.head.appendChild(link);
   }
 }
 
-// Keyboard Shortcuts
-function initKeyboard() {
-  document.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    
-    switch(e.key.toLowerCase()) {
-      case 'a': navigateTo('games'); break;
-      case 'm': navigateTo('movies'); break;
-      case 'h': navigateTo('home'); break;
-      case 'p': triggerPanic(); break;
+function initSettings() {
+  // FPS Booster
+  const fps = store.get('fpsBooster') !== 'false';
+  $('toggleFpsBooster').classList.toggle('on', fps);
+  document.body.classList.toggle('fps-boost-mode', fps);
+  $('toggleFpsBooster').onclick = () => {
+    const on = $('toggleFpsBooster').classList.toggle('on');
+    document.body.classList.toggle('fps-boost-mode', on);
+    store.set('fpsBooster', on);
+  };
+
+  // Stats
+  const stats = store.get('showStats') === 'true';
+  $('toggleStats').classList.toggle('on', stats);
+  $('statsOverlay').classList.toggle('visible', stats);
+  $('toggleStats').onclick = () => {
+    const on = $('toggleStats').classList.toggle('on');
+    $('statsOverlay').classList.toggle('visible', on);
+    store.set('showStats', on);
+  };
+
+  // Blur
+  const blur = store.get('blur') !== 'false';
+  $('toggleBlur').classList.toggle('on', blur);
+  document.body.setAttribute('data-blur', blur ? 'true' : 'false');
+  $('toggleBlur').onclick = () => {
+    const on = $('toggleBlur').classList.toggle('on');
+    document.body.setAttribute('data-blur', on ? 'true' : 'false');
+    store.set('blur', on);
+  };
+
+  // Bypass buttons
+  $('aboutBlankBtn').onclick = () => {
+    const win = window.open('about:blank', '_blank');
+    if (win) {
+      win.document.write(`<!DOCTYPE html><html><head><title>Classroom</title></head><body style="margin:0"><iframe src="${location.href}" style="width:100%;height:100vh;border:none"></iframe></body></html>`);
+      win.document.close();
     }
+  };
+
+  $('panicBtn').onclick = triggerPanic;
+
+  // Modals
+  $('embedClose').onclick = () => $('embedModal').classList.remove('active');
+  $('creditsClose').onclick = () => $('creditsModal').classList.remove('active');
+  $('legalClose').onclick = () => $('legalModal').classList.remove('active');
+
+  $('copyEmbedBtn').onclick = () => {
+    navigator.clipboard.writeText($('embedCode').value);
+    $('copyEmbedBtn').textContent = 'Copied!';
+    setTimeout(() => $('copyEmbedBtn').textContent = 'Copy to Clipboard', 1500);
+  };
+
+  $all('.legal-tab').forEach(tab => {
+    tab.onclick = () => {
+      $all('.legal-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      $('tosContent').style.display = tab.dataset.tab === 'tos' ? 'block' : 'none';
+      $('privacyContent').style.display = tab.dataset.tab === 'privacy' ? 'block' : 'none';
+    };
   });
 }
 
-// Panic
 function triggerPanic() {
   $('panicOverlay').classList.add('active');
   setTimeout(() => location.href = 'https://classroom.google.com', 800);
 }
 
-// Stats
+function initGames() {
+  renderGames();
+
+  $('gamesSearchInput').oninput = (e) => {
+    const q = e.target.value.toLowerCase();
+    $all('.game-card').forEach(card => {
+      card.style.display = card.querySelector('p').textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  };
+
+  $('firstGamesBtn').onclick = () => {
+    $('gamesMenu').style.display = 'none';
+    $('gamesHeader').style.display = 'flex';
+    $('gamesIframeContainer').style.display = 'block';
+    $('gamesBack').style.display = 'flex';
+    $('gamesReload').style.display = 'flex';
+    $('gamesIframe').src = 'https://tight-breeze-9313.brayyy316.workers.dev/';
+  };
+
+  $('secondGamesBtn').onclick = () => {
+    $('gamesMenu').style.display = 'none';
+    $('secondGamesContainer').style.display = 'block';
+    $('gamesHeader').style.display = 'flex';
+    $('gamesBack').style.display = 'flex';
+  };
+
+  $('gamePlayerBack').onclick = () => {
+    $('gamePlayerView').classList.remove('active');
+    $('secondGamesContainer').style.display = 'block';
+    $('gamePlayerIframe').src = '';
+  };
+
+  $('gamePlayerReload').onclick = () => $('gamePlayerIframe').src = $('gamePlayerIframe').src;
+
+  $('gamePlayerEmbed').onclick = () => {
+    $('embedModal').classList.add('active');
+    $('embedCode').value = `<iframe src="${GAME_BASE}/${currentGameUrl}/" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
+  };
+
+  $('gamePlayerIframe').onload = () => setTimeout(() => $('gamePlayerLoading').classList.add('hidden'), 500);
+
+  $('gamesBack').onclick = () => {
+    $('gamesIframeContainer').style.display = 'none';
+    $('secondGamesContainer').style.display = 'none';
+    $('gamesHeader').style.display = 'none';
+    $('gamesMenu').style.display = 'flex';
+    $('gamesBack').style.display = 'none';
+    $('gamesReload').style.display = 'none';
+    $('gamesIframe').src = '';
+  };
+
+  $('gamesReload').onclick = () => $('gamesIframe').src = $('gamesIframe').src;
+}
+
+function renderGames() {
+  $('gamesGrid').innerHTML = gamesData.map(g => `
+    <div class="game-card" data-url="${g.url}" data-name="${g.name}">
+      <img src="${GAME_BASE}/${g.url}/${g.image}" alt="${g.name}" loading="lazy" onerror="this.style.display='none'">
+      <p>${g.name}</p>
+    </div>
+  `).join('');
+
+  $all('.game-card').forEach(card => {
+    card.onclick = () => {
+      currentGameUrl = card.dataset.url;
+      $('gamePlayerTitle').textContent = card.dataset.name;
+      $('secondGamesContainer').style.display = 'none';
+      $('gamePlayerView').classList.add('active');
+      $('gamePlayerLoading').classList.remove('hidden');
+      $('gamePlayerIframe').src = `${GAME_BASE}/${currentGameUrl}/`;
+    };
+  });
+}
+
+function initNav() {
+  function show(page) {
+    $('homePage').style.display = 'none';
+    $('gamesPage').classList.remove('active');
+    $('moviesPage').classList.remove('active');
+    $('partnersPage').classList.remove('active');
+    $('settingsPage').classList.remove('active');
+    $all('.nav-link').forEach(l => l.classList.remove('active'));
+
+    if (page === 'home') { $('homePage').style.display = 'flex'; $('homeLink').classList.add('active'); }
+    else if (page === 'games') {
+      $('gamesPage').classList.add('active');
+      $('gamesLink').classList.add('active');
+      $('gamesMenu').style.display = 'flex';
+      $('gamesHeader').style.display = 'none';
+      $('gamesIframeContainer').style.display = 'none';
+      $('secondGamesContainer').style.display = 'none';
+      $('gamePlayerView').classList.remove('active');
+      
+    }
+    else if (page === 'movies') { $('moviesPage').classList.add('active'); $('moviesLink').classList.add('active'); $('moviesIframe').src = 'https://www.fmovies.gd/home'; }
+    else if (page === 'partners') { $('partnersPage').classList.add('active'); $('partnersLink').classList.add('active'); }
+    else if (page === 'settings') { $('settingsPage').classList.add('active'); }
+  }
+
+  $('homeLink').onclick = () => show('home');
+  $('gamesLink').onclick = () => show('games');
+  $('moviesLink').onclick = () => show('movies');
+  $('partnersLink').onclick = () => show('partners');
+  $('settingsLink').onclick = () => show('settings');
+
+  $('gamesHome').onclick = () => show('home');
+  $('moviesHome').onclick = () => show('home');
+  $('partnersBack').onclick = () => show('home');
+  $('settingsBack').onclick = () => show('home');
+
+  $('creditsLink').onclick = () => $('creditsModal').classList.add('active');
+  $('legalLink').onclick = () => $('legalModal').classList.add('active');
+
+  $('sidebarCloseBtn').onclick = () => { $('sidebar').classList.add('collapsed'); $('sidebarOpenBtn').classList.add('visible'); $('mainWrapper').classList.add('expanded'); };
+  $('sidebarOpenBtn').onclick = () => { $('sidebar').classList.remove('collapsed'); $('sidebarOpenBtn').classList.remove('visible'); $('mainWrapper').classList.remove('expanded'); };
+
+  if (window.innerWidth <= 768) { $('sidebar').classList.add('collapsed'); $('sidebarOpenBtn').classList.add('visible'); $('mainWrapper').classList.add('expanded'); }
+}
+
+function initKeys() {
+  document.onkeydown = (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key.toLowerCase() === 'a') $('gamesLink').click();
+    if (e.key.toLowerCase() === 'm') $('moviesLink').click();
+    if (e.key.toLowerCase() === 'h') $('homeLink').click();
+    if (e.key.toLowerCase() === 'p') triggerPanic();
+  };
+}
+
 function initStats() {
   let last = performance.now(), frames = 0;
-  
   function fps() {
     frames++;
     const now = performance.now();
     if (now - last >= 1000) {
       const f = Math.round(frames * 1000 / (now - last));
       $('fpsValue').textContent = f;
-      $('fpsValue').className = f >= 50 ? 'good' : f >= 30 ? 'warn' : 'bad';
+      $('fpsValue').className = 'stat-value ' + (f >= 50 ? 'good' : f >= 30 ? 'warn' : 'bad');
       frames = 0;
       last = now;
     }
     requestAnimationFrame(fps);
   }
   requestAnimationFrame(fps);
-  
+
   setInterval(() => {
     const start = Date.now();
     fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' })
       .then(() => {
         const ping = Date.now() - start;
         $('pingValue').textContent = ping + 'ms';
-        $('pingValue').className = ping < 100 ? 'good' : ping < 300 ? 'warn' : 'bad';
+        $('pingValue').className = 'stat-value ' + (ping < 100 ? 'good' : ping < 300 ? 'warn' : 'bad');
       }).catch(() => $('pingValue').textContent = '--');
   }, 5000);
-  
+
   if (navigator.getBattery) {
     navigator.getBattery().then(b => {
       function bat() {
         const l = Math.round(b.level * 100);
         $('batteryValue').textContent = l + '%';
-        $('batteryValue').className = l > 20 ? 'good' : 'bad';
+        $('batteryValue').className = 'stat-value ' + (l > 20 ? 'good' : 'bad');
       }
       bat();
       b.addEventListener('levelchange', bat);
@@ -655,38 +607,10 @@ function initStats() {
   }
 }
 
-// Modals
-function initModals() {
-  // Close buttons
-  $('embedClose').addEventListener('click', () => $('embedModal').classList.remove('active'));
-  $('creditsClose').addEventListener('click', () => $('creditsModal').classList.remove('active'));
-  $('legalClose').addEventListener('click', () => $('legalModal').classList.remove('active'));
-  
-  // Copy embed
-  $('copyEmbedBtn').addEventListener('click', () => {
-    navigator.clipboard.writeText($('embedCode').value);
-    $('copyEmbedBtn').textContent = 'Copied!';
-    setTimeout(() => $('copyEmbedBtn').textContent = 'Copy to Clipboard', 1500);
-  });
-  
-  // Legal tabs
-  $all('.legal-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      $all('.legal-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      $('tosContent').style.display = tab.dataset.tab === 'tos' ? 'block' : 'none';
-      $('privacyContent').style.display = tab.dataset.tab === 'privacy' ? 'block' : 'none';
-    });
-  });
-  
-  // Settings footer buttons
-  $('creditsBtn').addEventListener('click', () => $('creditsModal').classList.add('active'));
-  $('legalBtn').addEventListener('click', () => $('legalModal').classList.add('active'));
-  
-  // Close on overlay click
-  $all('.modal-overlay').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('active');
-    });
-  });
+function updateTime() {
+  const now = new Date();
+  $('time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  $('date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 }
+
+document.addEventListener('pointerlockchange', () => $('pointerLockHint').classList.toggle('visible', !!document.pointerLockElement));
