@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="sight.w - ur spot for stuff">
+  <meta name="description" content="Student Dashboard - Assignments, Resources & Study Tools">
   <meta name="theme-color" content="#0a0a0f">
-  <title>math</title>
+  <title>Student Dashboard</title>
   <link rel="icon" type="image/png" href="https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,11 +17,11 @@
   <!-- Loading Screen -->
   <div class="loading-screen" id="loadingScreen">
     <img class="loading-logo" src="https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png" alt="Logo">
-    <h1 class="loading-title">math</h1>
+    <h1 class="loading-title">Student Dashboard</h1>
     <div class="loading-bar-container">
       <div class="loading-bar"></div>
     </div>
-    <p class="loading-text">loading... sight.w</p>
+    <p class="loading-text">loading assignments...</p>
   </div>
 
   <!-- Panic Overlay -->
@@ -51,6 +51,7 @@
         <li class="nav-item"><a class="nav-link active" id="homeLink"><i class="fas fa-house"></i> Home</a></li>
         <li class="nav-item"><a class="nav-link" id="gamesLink"><i class="fas fa-gamepad"></i> Activities</a></li>
         <li class="nav-item"><a class="nav-link" id="moviesLink"><i class="fas fa-clapperboard"></i> Media</a></li>
+        <li class="nav-item"><a class="nav-link" id="chatLink"><i class="fab fa-discord"></i> Chat</a></li>
         <li class="nav-item"><a class="nav-link" id="partnersLink"><i class="fas fa-handshake"></i> Partners</a></li>
       </ul>
 
@@ -65,8 +66,8 @@
       <!-- Home -->
       <main class="main" id="homePage">
         <header class="main-header">
-          <h1 class="main-title">mathixl</h1>
-          <p class="main-subtitle">had to rename sigh.w to sight.math bc the stupid gogaurdina update</p>
+          <h1 class="main-title">sight.math</h1>
+          <p class="main-subtitle">study resources & tools for students</p>
         </header>
 
         <div class="info-box">
@@ -167,6 +168,24 @@
         </header>
         <div class="fullpage-body">
           <iframe class="fullpage-iframe" id="moviesIframe" title="Movies" allow="fullscreen *;" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+        </div>
+      </div>
+
+      <!-- Chat Page -->
+      <div class="chat-page" id="chatPage">
+        <header class="fullpage-header">
+          <h2 class="fullpage-title"><i class="fab fa-discord"></i> Chat</h2>
+          <div class="fullpage-btns">
+            <button class="fullpage-btn home-btn" id="chatHome"><i class="fas fa-house"></i> Home</button>
+          </div>
+        </header>
+        <div class="chat-body">
+          <widgetbot
+            server="1487435823283572898"
+            channel="1487698353595617371"
+            width="100%"
+            height="100%"
+          ></widgetbot>
         </div>
       </div>
 
@@ -342,6 +361,6 @@
     <div class="stat-row"><span class="stat-label">Battery</span><span class="stat-value" id="batteryValue">--</span></div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
   <script src="script.js"></script>
 </body>
-</html>
