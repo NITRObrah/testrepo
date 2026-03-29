@@ -14,23 +14,20 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body data-theme="dark">
-  <!-- Loading Screen -->
   <div class="loading-screen" id="loadingScreen">
     <img class="loading-logo" src="https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png" alt="Logo">
     <h1 class="loading-title">Student Dashboard</h1>
     <div class="loading-bar-container">
       <div class="loading-bar"></div>
     </div>
-    <p class="loading-text">loading assignments...</p>
+    <p class="loading-text">loading resources...</p>
   </div>
 
-  <!-- Panic Overlay -->
-  <div class="panic-overlay" id="panicOverlay">
+  <div class="exit-overlay" id="exitOverlay">
     <i class="fas fa-graduation-cap"></i>
     <span>Redirecting to Google Classroom...</span>
   </div>
 
-  <!-- App -->
   <div class="app">
     <button class="sidebar-open-btn" id="sidebarOpenBtn"><i class="fas fa-chevron-left"></i></button>
     
@@ -49,9 +46,9 @@
 
       <ul class="nav-list">
         <li class="nav-item"><a class="nav-link active" id="homeLink"><i class="fas fa-house"></i> Home</a></li>
-        <li class="nav-item"><a class="nav-link" id="gamesLink"><i class="fas fa-gamepad"></i> Activities</a></li>
-        <li class="nav-item"><a class="nav-link" id="moviesLink"><i class="fas fa-clapperboard"></i> Media</a></li>
-        <li class="nav-item"><a class="nav-link" id="chatLink"><i class="fab fa-discord"></i> Chat</a></li>
+        <li class="nav-item"><a class="nav-link" id="toolsLink"><i class="fas fa-shapes"></i> Practice</a></li>
+        <li class="nav-item"><a class="nav-link" id="mediaLink"><i class="fas fa-photo-film"></i> Media</a></li>
+        <li class="nav-item"><a class="nav-link" id="chatLink"><i class="fas fa-comments"></i> Discussion</a></li>
         <li class="nav-item"><a class="nav-link" id="partnersLink"><i class="fas fa-handshake"></i> Partners</a></li>
       </ul>
 
@@ -63,7 +60,6 @@
     </aside>
 
     <div class="main-wrapper" id="mainWrapper">
-      <!-- Home -->
       <main class="main" id="homePage">
         <header class="main-header">
           <h1 class="main-title">sight.math</h1>
@@ -72,124 +68,110 @@
 
         <div class="info-box">
           <div class="info-box-header">
-            <i class="fas fa-fire"></i>
-            <h3 class="info-box-title">new math stuff</h3>
+            <i class="fas fa-lightbulb"></i>
+            <h3 class="info-box-title">resources</h3>
           </div>
           <div class="info-box-content">
             <ul>
-              <li>Tab cloak - look like ur doing work</li>
-              <li>about:blank button - bypass filters</li>
-              <li>Panic button (P key) - instant redirect</li>
+              <li>Tab title customization</li>
+              <li>Quick exit button (P key)</li>
+              <li>Fullscreen focus mode</li>
             </ul>
             <a href="https://github.com/NITRObrah" target="_blank" class="info-box-link">
-              <i class="fab fa-github"></i> github
+              <i class="fab fa-github"></i> source
             </a>
           </div>
         </div>
 
         <div class="info-box">
           <div class="info-box-header">
-            <i class="fas fa-signal"></i>
+            <i class="fas fa-circle-info"></i>
             <h3 class="info-box-title">status</h3>
           </div>
           <div class="info-box-content">
-            <p>working on something..</p>
+            <p>updating study materials...</p>
           </div>
         </div>
       </main>
 
-      <!-- Activities -->
-      <div class="fullpage-view" id="gamesPage">
-        <div class="games-menu" id="gamesMenu">
-          <div class="games-option" id="firstGamesBtn">
-            <i class="fas fa-gamepad"></i>
-            <h3 class="games-option-title">1st maths</h3>
-            <p class="games-option-desc">500+ maths</p>
+      <div class="fullpage-view" id="toolsPage">
+        <div class="tools-menu" id="toolsMenu">
+          <div class="games-option" id="firstToolsBtn">
+            <i class="fas fa-book-open"></i>
+            <h3 class="games-option-title">Study Set A</h3>
+            <p class="games-option-desc">500+ exercises</p>
           </div>
-          <div class="games-option" id="secondGamesBtn">
-            <i class="fas fa-fire"></i>
-            <h3 class="games-option-title">2nd maths</h3>
-            <p class="games-option-desc">iconic maths</p>
-            <span style="display:block;margin-top:8px;padding:4px 12px;background:var(--accent);color:#fff;border-radius:6px;font-size:11px;font-weight:700;">RECOMMENDED</span>
+          <div class="games-option" id="secondToolsBtn">
+            <i class="fas fa-flask"></i>
+            <h3 class="games-option-title">Study Set B</h3>
+            <p class="games-option-desc">extended collection</p>
+            <span class="badge-rec">RECOMMENDED</span>
           </div>
         </div>
 
-        <header class="fullpage-header" id="gamesHeader" style="display: none;">
-          <h2 class="fullpage-title"><i class="fas fa-gamepad"></i> Activities</h2>
+        <header class="fullpage-header" id="toolsHeader" style="display: none;">
+          <h2 class="fullpage-title"><i class="fas fa-shapes"></i> Practice</h2>
           <div class="fullpage-btns">
-            <button class="fullpage-btn" id="gamesBack" style="display: none;"><i class="fas fa-arrow-left"></i> Back</button>
-            <button class="fullpage-btn" id="gamesReload" style="display: none;"><i class="fas fa-rotate-right"></i> Reload</button>
-            <button class="fullpage-btn home-btn" id="gamesHome"><i class="fas fa-house"></i> Home</button>
+            <button class="fullpage-btn" id="toolsBack" style="display: none;"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="fullpage-btn" id="toolsReload" style="display: none;"><i class="fas fa-rotate-right"></i> Reload</button>
+            <button class="fullpage-btn home-btn" id="toolsHome"><i class="fas fa-house"></i> Home</button>
           </div>
         </header>
 
-        <div class="fullpage-body" id="gamesIframeContainer" style="display: none;">
-          <iframe class="fullpage-iframe" id="gamesIframe" title="Games" allow="fullscreen *; gamepad *;" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+        <div class="fullpage-body" id="toolsIframeContainer" style="display: none;">
+          <iframe class="fullpage-iframe" id="toolsIframe" title="Practice" allow="fullscreen *; gamepad *;" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
         </div>
 
-        <!-- 2nd Games -->
-        <div class="second-games" id="secondGamesContainer" style="display: none;">
+        <div class="second-games" id="secondToolsContainer" style="display: none;">
           <div class="second-games-header">
-            <input type="text" class="second-games-search" id="gamesSearchInput" placeholder="Search games...">
+            <input type="text" class="second-games-search" id="toolsSearchInput" placeholder="Search exercises...">
           </div>
-          <div class="second-games-grid" id="gamesGrid"></div>
+          <div class="second-games-grid" id="toolsGrid"></div>
         </div>
 
-        <!-- Game Player -->
-        <div class="game-player-view" id="gamePlayerView">
+        <div class="game-player-view" id="toolPlayerView">
           <header class="game-player-header">
-            <h2 class="game-player-title"><i class="fas fa-gamepad"></i> <span id="gamePlayerTitle">Game</span></h2>
+            <h2 class="game-player-title"><i class="fas fa-shapes"></i> <span id="toolPlayerTitle">Exercise</span></h2>
             <div class="game-player-btns">
-              <button class="fullpage-btn" id="gamePlayerReload"><i class="fas fa-rotate-right"></i> Reload</button>
-              <button class="fullpage-btn accent-btn" id="gamePlayerEmbed"><i class="fas fa-code"></i> Embed</button>
-              <button class="fullpage-btn" id="gamePlayerBack"><i class="fas fa-arrow-left"></i> Back</button>
+              <button class="fullpage-btn" id="toolPlayerReload"><i class="fas fa-rotate-right"></i> Reload</button>
+              <button class="fullpage-btn accent-btn" id="toolPlayerEmbed"><i class="fas fa-code"></i> Embed</button>
+              <button class="fullpage-btn" id="toolPlayerBack"><i class="fas fa-arrow-left"></i> Back</button>
             </div>
           </header>
           <div class="game-player-body">
-            <div class="game-player-loading" id="gamePlayerLoading">
+            <div class="game-player-loading" id="toolPlayerLoading">
               <i class="fas fa-circle-notch"></i>
-              <span>Loading tis  game well well well...</span>
+              <span>Loading content...</span>
             </div>
-            <div class="pointer-lock-hint" id="pointerLockHint">Click game to lock mouse | Press ESC to release</div>
-            <iframe class="game-player-iframe" id="gamePlayerIframe" title="Game" allow="fullscreen *; gamepad *; clipboard-write *; pointer-lock *;" allowfullscreen></iframe>
+            <div class="pointer-lock-hint" id="pointerLockHint">Click to focus | Press ESC to release</div>
+            <iframe class="game-player-iframe" id="toolPlayerIframe" title="Practice" allow="fullscreen *; gamepad *; clipboard-write *; pointer-lock *;" allowfullscreen></iframe>
           </div>
         </div>
-
       </div>
 
-      <!-- Movies -->
-      <div class="fullpage-view" id="moviesPage">
+      <div class="fullpage-view" id="mediaPage">
         <header class="fullpage-header">
-          <h2 class="fullpage-title"><i class="fas fa-clapperboard"></i> Movies</h2>
+          <h2 class="fullpage-title"><i class="fas fa-photo-film"></i> Media</h2>
           <div class="fullpage-btns">
-            <button class="fullpage-btn" id="moviesReload"><i class="fas fa-rotate-right"></i> Reload</button>
-            <button class="fullpage-btn home-btn" id="moviesHome"><i class="fas fa-house"></i> Home</button>
+            <button class="fullpage-btn" id="mediaReload"><i class="fas fa-rotate-right"></i> Reload</button>
+            <button class="fullpage-btn home-btn" id="mediaHome"><i class="fas fa-house"></i> Home</button>
           </div>
         </header>
         <div class="fullpage-body">
-          <iframe class="fullpage-iframe" id="moviesIframe" title="Movies" allow="fullscreen *;" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
+          <iframe class="fullpage-iframe" id="mediaIframe" title="Media" allow="fullscreen *;" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"></iframe>
         </div>
       </div>
 
-      <!-- Chat Page -->
       <div class="chat-page" id="chatPage">
         <header class="fullpage-header">
-          <h2 class="fullpage-title"><i class="fab fa-discord"></i> Chat</h2>
+          <h2 class="fullpage-title"><i class="fas fa-comments"></i> Discussion</h2>
           <div class="fullpage-btns">
             <button class="fullpage-btn home-btn" id="chatHome"><i class="fas fa-house"></i> Home</button>
           </div>
         </header>
-        <div class="chat-body">
-          <widgetbot
-            server="1487435823283572898"
-            channel="1487698353595617371"
-            width="100%"
-            height="100%"
-          ></widgetbot>
-        </div>
+        <div class="chat-body" id="chatBody"></div>
       </div>
 
-      <!-- Partners -->
       <div class="partners-page" id="partnersPage">
         <div class="partners-content">
           <button class="partners-back" id="partnersBack"><i class="fas fa-arrow-left"></i> Back</button>
@@ -197,7 +179,7 @@
             <h2 class="partners-title">Partners</h2>
           </div>
           <div class="partners-grid">
-            <article class="partner-card" onclick="window.open('https://mathsight.fillout.com/sight', '_blank')">
+            <article class="partner-card" id="partnerFormCard">
               <div class="partner-logo-wrap"><i class="fas fa-handshake"></i></div>
               <h3 class="partner-name">Partner Form</h3>
               <p class="partner-desc">want to partner? fill this out</p>
@@ -211,7 +193,6 @@
         </div>
       </div>
 
-      <!-- Settings -->
       <div class="settings-page" id="settingsPage">
         <div class="settings-content">
           <button class="settings-back" id="settingsBack"><i class="fas fa-arrow-left"></i> Back</button>
@@ -219,7 +200,6 @@
             <h2 class="settings-title">Settings</h2>
           </div>
 
-          <!-- Theme -->
           <div class="settings-section">
             <h3 class="settings-section-title"><i class="fas fa-palette"></i> Theme</h3>
             <div class="theme-grid">
@@ -233,7 +213,6 @@
             </div>
           </div>
 
-          <!-- Performance -->
           <div class="settings-section">
             <h3 class="settings-section-title"><i class="fas fa-gauge-high"></i> Performance</h3>
             <div class="toggle-row">
@@ -250,24 +229,22 @@
             </div>
           </div>
 
-          <!-- Bypass -->
           <div class="settings-section">
-            <h3 class="settings-section-title"><i class="fas fa-shield-halved"></i> Bypass</h3>
+            <h3 class="settings-section-title"><i class="fas fa-wand-magic-sparkles"></i> Tools</h3>
             <div class="bypass-grid">
-              <button class="bypass-btn" id="aboutBlankBtn">
-                <i class="fas fa-external-link"></i>
-                about:blank Cloak
+              <button class="bypass-btn" id="focusModeBtn">
+                <i class="fas fa-expand"></i>
+                Focus Mode
               </button>
-              <button class="bypass-btn panic" id="panicBtn">
-                <i class="fas fa-graduation-cap"></i>
-                Panic (P key)
+              <button class="bypass-btn exit-btn" id="exitBtn">
+                <i class="fas fa-right-from-bracket"></i>
+                Quick Exit (P)
               </button>
             </div>
           </div>
 
-          <!-- Tab Cloak -->
           <div class="settings-section">
-            <h3 class="settings-section-title"><i class="fas fa-mask"></i> Tab Cloak</h3>
+            <h3 class="settings-section-title"><i class="fas fa-tag"></i> Display Name</h3>
             <div class="cloak-grid">
               <button class="cloak-btn active" data-cloak="default"><i class="fas fa-eye"></i>sight.w</button>
               <button class="cloak-btn" data-cloak="canvas"><img src="https://canvas.instructure.com/favicon.ico" alt="">Canvas</button>
@@ -280,15 +257,13 @@
     </div>
   </div>
 
-  <!-- Keyboard Hints -->
   <div class="kbd-hint">
-    <span><kbd>A</kbd> Activities</span>
-    <span><kbd>M</kbd> Movies</span>
+    <span><kbd>A</kbd> Practice</span>
+    <span><kbd>M</kbd> Media</span>
     <span><kbd>H</kbd> Home</span>
-    <span><kbd>P</kbd> Panic</span>
+    <span><kbd>P</kbd> Exit</span>
   </div>
 
-  <!-- Embed Modal -->
   <div class="modal-overlay" id="embedModal">
     <div class="modal">
       <header class="modal-header">
@@ -302,7 +277,6 @@
     </div>
   </div>
 
-  <!-- Credits Modal -->
   <div class="modal-overlay" id="creditsModal">
     <div class="modal">
       <header class="modal-header">
@@ -311,20 +285,19 @@
       </header>
       <div class="modal-body">
         <div class="credits-block">
-          <div class="credits-label">2nd Games</div>
+          <div class="credits-label">Resources</div>
           <div class="credits-item-title">NativeLite</div>
           <div class="credits-item-note">from <a href="https://github.com/parcoillegacy/nativelite" target="_blank">parcoillegacy/nativelite</a></div>
         </div>
         <div class="credits-block">
           <div class="credits-label">Thanks</div>
-          <div class="credits-item-title">Proxy</div>
+          <div class="credits-item-title">Infrastructure</div>
           <div class="credits-item-note">mathpunch Official</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Legal Modal -->
   <div class="modal-overlay" id="legalModal">
     <div class="modal">
       <header class="modal-header">
@@ -338,7 +311,7 @@
         </div>
         <div class="legal-content" id="tosContent">
           <h3>1. Acceptance</h3>
-          <p>By using sight.w, you accept these terms.</p>
+          <p>By using this dashboard, you accept these terms.</p>
           <h3>2. Use</h3>
           <p>For educational and personal use only.</p>
           <h3>3. Disclaimer</h3>
@@ -354,13 +327,12 @@
     </div>
   </div>
 
-  <!-- Stats -->
   <div class="stats-overlay" id="statsOverlay">
     <div class="stat-row"><span class="stat-label">FPS</span><span class="stat-value" id="fpsValue">60</span></div>
     <div class="stat-row"><span class="stat-label">Ping</span><span class="stat-value" id="pingValue">--</span></div>
     <div class="stat-row"><span class="stat-label">Battery</span><span class="stat-value" id="batteryValue">--</span></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
   <script src="script.js"></script>
 </body>
+</html>
