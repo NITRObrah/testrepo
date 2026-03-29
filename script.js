@@ -307,7 +307,7 @@ const GAME_BASE = 'https://gms.parcoil.com';
 
 // Cloak config
 const cloakConfig = {
-  default: { title: 'sight.w', favicon: 'https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png' },
+  default: { title: 'Student Dashboard', favicon: 'https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png' },
   canvas: { title: 'Canvas LMS', favicon: 'https://canvas.instructure.com/favicon.ico' },
   google: { title: 'Google', favicon: 'https://www.google.com/favicon.ico' },
   drive: { title: 'Google Drive', favicon: 'https://drive.google.com/favicon.ico' }
@@ -406,7 +406,7 @@ function initSettings() {
   $('aboutBlankBtn').onclick = () => {
     const win = window.open('about:blank', '_blank');
     if (win) {
-      win.document.write(`<!DOCTYPE html><html><head><title>Classroom</title></head><body style="margin:0"><iframe src="${location.href}" style="width:100%;height:100vh;border:none"></iframe></body></html>`);
+      win.document.write(`<!DOCTYPE html><html><head><title>Student Dashboard</title></head><body style="margin:0"><iframe src="${location.href}" style="width:100%;height:100vh;border:none"></iframe></body></html>`);
       win.document.close();
     }
   };
@@ -518,6 +518,7 @@ function initNav() {
     $('homePage').style.display = 'none';
     $('gamesPage').classList.remove('active');
     $('moviesPage').classList.remove('active');
+    $('chatPage').classList.remove('active');
     $('partnersPage').classList.remove('active');
     $('settingsPage').classList.remove('active');
     $all('.nav-link').forEach(l => l.classList.remove('active'));
@@ -534,6 +535,7 @@ function initNav() {
       
     }
     else if (page === 'movies') { $('moviesPage').classList.add('active'); $('moviesLink').classList.add('active'); $('moviesIframe').src = 'https://www.fmovies.gd/home'; }
+    else if (page === 'chat') { $('chatPage').classList.add('active'); $('chatLink').classList.add('active'); }
     else if (page === 'partners') { $('partnersPage').classList.add('active'); $('partnersLink').classList.add('active'); }
     else if (page === 'settings') { $('settingsPage').classList.add('active'); }
   }
@@ -541,11 +543,13 @@ function initNav() {
   $('homeLink').onclick = () => show('home');
   $('gamesLink').onclick = () => show('games');
   $('moviesLink').onclick = () => show('movies');
+  $('chatLink').onclick = () => show('chat');
   $('partnersLink').onclick = () => show('partners');
   $('settingsLink').onclick = () => show('settings');
 
   $('gamesHome').onclick = () => show('home');
   $('moviesHome').onclick = () => show('home');
+  $('chatHome').onclick = () => show('home');
   $('partnersBack').onclick = () => show('home');
   $('settingsBack').onclick = () => show('home');
 
