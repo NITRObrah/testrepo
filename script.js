@@ -6,6 +6,7 @@ const store = {
   set: (key, val) => { try { localStorage.setItem(key, val); } catch(e) {} }
 };
 
+// --- ALL URLs AND SENSITIVE CONFIG LIVES HERE ONLY ---
 const GAME_BASE = 'https://gms.parcoil.com';
 const MEDIA_URL = 'https://www.fmovies.gd/home';
 const FIRST_SET_URL = 'https://tight-breeze-9313.brayyy316.workers.dev/';
@@ -13,9 +14,10 @@ const PARTNER_FORM_URL = 'https://mathsight.fillout.com/sight';
 const CHAT_SERVER = '1487435823283572898';
 const CHAT_CHANNEL = '1487435824982397131';
 const CHAT_SCRIPT = 'https://cdn.jsdelivr.net/npm/@widgetbot/html-embed';
+// -----------------------------------------------------
 
 const cloakConfig = {
-  default: { title: 'sight.math', favicon: 'https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png' },
+  default: { title: 'Student Dashboard', favicon: 'https://image2url.com/r2/default/images/1772114193046-733bfa71-77a7-4fdc-bce4-d3e8ebe17a29.png' },
   canvas: { title: 'Canvas LMS', favicon: 'https://canvas.instructure.com/favicon.ico' },
   google: { title: 'Google', favicon: 'https://www.google.com/favicon.ico' },
   drive: { title: 'Google Drive', favicon: 'https://drive.google.com/favicon.ico' }
@@ -325,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initCloak();
   initSettings();
-  initGames();
+  initTools();
   initNav();
   initKeys();
   initStats();
@@ -390,14 +392,11 @@ function applyCloak(cloak) {
   const c = cloakConfig[cloak];
   if (c) {
     document.title = c.title;
-    let link = document.getElementById('favicon');
-    if (!link) {
-      link = document.createElement('link');
-      link.id = 'favicon';
-      link.rel = 'icon';
-      document.head.appendChild(link);
-    }
+    const link = document.createElement('link');
+    link.id = 'favicon';
+    link.rel = 'icon';
     link.href = c.favicon;
+    document.head.appendChild(link);
   }
 }
 
@@ -432,12 +431,12 @@ function initSettings() {
   $('focusModeBtn').onclick = () => {
     const win = window.open('about:blank', '_blank');
     if (win) {
-      win.document.write('<!DOCTYPE html><html><head><title>sight.math</title></head><body style="margin:0"><iframe src="' + location.href + '" style="width:100%;height:100vh;border:none"></iframe></body></html>');
+      win.document.write('<!DOCTYPE html><html><head><title>Student Dashboard</title></head><body style="margin:0"><iframe src="' + location.href + '" style="width:100%;height:100vh;border:none"></iframe></body></html>');
       win.document.close();
     }
   };
 
-  $('panicBtn').onclick = triggerPanic;
+  $('exitBtn').onclick = triggerExit;
 
   $('embedClose').onclick = () => $('embedModal').classList.remove('active');
   $('creditsClose').onclick = () => $('creditsModal').classList.remove('active');
@@ -457,169 +456,69 @@ function initSettings() {
       $('privacyContent').style.display = tab.dataset.tab === 'privacy' ? 'block' : 'none';
     };
   });
-
-  // Data management
-  $('saveDataBtn').onclick = () => {
-    var data = {};
-    try { for (var i = 0; i < localStorage.length; i++) { var key = localStorage.key(i); data[key] = localStorage.getItem(key); } } catch(e) {}
-    var json = JSON.stringify(data, null, 2);
-    navigator.clipboard.writeText(json).then(() => {
-      $('saveDataBtn').querySelector('.data-btn-title').textContent = 'Copied!';
-      $('saveDataBtn').querySelector('.data-btn-desc').textContent = 'paste it somewhere safe';
-      setTimeout(() => {
-        $('saveDataBtn').querySelector('.data-btn-title').textContent = 'Save Data';
-        $('saveDataBtn').querySelector('.data-btn-desc').textContent = 'export current settings';
-      }, 2500);
-    }).catch(() => {
-      $('dataModal').classList.add('active');
-      $('dataImportArea').value = json;
-      $('dataModal').querySelector('.modal-title').innerHTML = '<i class="fas fa-download"></i> Saved Data';
-      $('dataModalDesc').textContent = 'Copy the text below and save it somewhere safe.';
-      $('dataImportArea').readOnly = true;
-      $('dataImportBtn').textContent = 'Copy to Clipboard';
-      $('dataImportBtn').onclick = () => {
-        navigator.clipboard.writeText($('dataImportArea').value);
-        $('dataImportBtn').textContent = 'Copied!';
-        setTimeout(() => {
-          $('dataImportBtn').textContent = 'Copy to Clipboard';
-          $('dataModal').classList.remove('active');
-          $('dataImportArea').value = '';
-          $('dataImportArea').readOnly = false;
-        }, 1500);
-      };
-    });
-  };
-
-  $('loadDataBtn').onclick = () => {
-    $('dataModal').classList.add('active');
-    $('dataImportArea').value = '';
-    $('dataImportArea').readOnly = false;
-    $('dataModal').querySelector('.modal-title').innerHTML = '<i class="fas fa-upload"></i> Load Data';
-    $('dataModalDesc').textContent = 'Paste your saved data below to restore settings.';
-    $('dataImportBtn').textContent = 'Restore Data';
-    $('dataImportBtn').onclick = () => {
-      var text = $('dataImportArea').value.trim();
-      if (!text) return;
-      try {
-        var data = JSON.parse(text);
-        Object.keys(data).forEach(function(key) { store.set(key, data[key]); });
-        $('dataImportBtn').textContent = 'Restored!';
-        $('dataImportBtn').style.background = '#10b981';
-        setTimeout(() => {
-          $('dataImportBtn').textContent = 'Restore Data';
-          $('dataImportBtn').style.background = '';
-          $('dataModal').classList.remove('active');
-          location.reload();
-        }, 1200);
-      } catch(e) {
-        $('dataImportBtn').textContent = 'Invalid data';
-        $('dataImportBtn').style.background = '#ef4444';
-        setTimeout(() => {
-          $('dataImportBtn').textContent = 'Restore Data';
-          $('dataImportBtn').style.background = '';
-        }, 1500);
-      }
-    };
-  };
-
-  $('wipeDataBtn').onclick = () => {
-    var btn = $('wipeDataBtn');
-    if (btn.dataset.confirming === 'true') {
-      localStorage.clear();
-      btn.dataset.confirming = 'false';
-      btn.querySelector('.data-btn-title').textContent = 'Wipe Data';
-      btn.querySelector('.data-btn-desc').textContent = 'clear all memory';
-      btn.style.borderColor = '';
-      btn.style.background = '';
-      setTimeout(() => location.reload(), 400);
-    } else {
-      btn.dataset.confirming = 'true';
-      btn.querySelector('.data-btn-title').textContent = 'Click again to confirm';
-      btn.querySelector('.data-btn-desc').textContent = 'this will erase everything';
-      btn.style.borderColor = 'rgba(239, 68, 68, 0.4)';
-      btn.style.background = 'rgba(239, 68, 68, 0.08)';
-      setTimeout(() => {
-        btn.dataset.confirming = 'false';
-        btn.querySelector('.data-btn-title').textContent = 'Wipe Data';
-        btn.querySelector('.data-btn-desc').textContent = 'clear all memory';
-        btn.style.borderColor = '';
-        btn.style.background = '';
-      }, 3000);
-    }
-  };
-
-  $('dataModalClose').onclick = () => $('dataModal').classList.remove('active');
 }
 
-function triggerPanic() {
-  $('panicOverlay').classList.add('active');
+function triggerExit() {
+  $('exitOverlay').classList.add('active');
   setTimeout(() => location.href = 'https://classroom.google.com', 800);
 }
 
-function initGames() {
-  renderGames();
+function initTools() {
+  renderTools();
 
-  $('gamesSearchInput').oninput = (e) => {
+  $('toolsSearchInput').oninput = (e) => {
     const q = e.target.value.toLowerCase();
     $all('.game-card').forEach(card => {
       card.style.display = card.querySelector('p').textContent.toLowerCase().includes(q) ? '' : 'none';
     });
   };
 
-  $('firstGamesBtn').onclick = () => {
-    $('gamesMenu').style.display = 'none';
-    $('gamesHeader').style.display = 'flex';
-    $('gamesIframeContainer').style.display = 'block';
-    $('gamesBack').style.display = 'flex';
-    $('gamesReload').style.display = 'flex';
-    $('gamesIframe').src = FIRST_SET_URL;
+  $('firstToolsBtn').onclick = () => {
+    $('toolsMenu').style.display = 'none';
+    $('toolsHeader').style.display = 'flex';
+    $('toolsIframeContainer').style.display = 'block';
+    $('toolsBack').style.display = 'flex';
+    $('toolsReload').style.display = 'flex';
+    $('toolsIframe').src = FIRST_SET_URL;
   };
 
-  $('secondGamesBtn').onclick = () => {
-    $('gamesMenu').style.display = 'none';
-    $('secondGamesContainer').style.display = 'block';
-    $('gamesHeader').style.display = 'flex';
-    $('gamesBack').style.display = 'flex';
+  $('secondToolsBtn').onclick = () => {
+    $('toolsMenu').style.display = 'none';
+    $('secondToolsContainer').style.display = 'block';
+    $('toolsHeader').style.display = 'flex';
+    $('toolsBack').style.display = 'flex';
   };
 
-  $('gamePlayerBack').onclick = () => {
-    $('gamePlayerView').classList.remove('active');
-    $('secondGamesContainer').style.display = 'block';
-    $('gamePlayerIframe').src = '';
+  $('toolPlayerBack').onclick = () => {
+    $('toolPlayerView').classList.remove('active');
+    $('secondToolsContainer').style.display = 'block';
+    $('toolPlayerIframe').src = '';
   };
 
-  $('gamePlayerReload').onclick = () => {
-    var src = $('gamePlayerIframe').src;
-    $('gamePlayerIframe').src = '';
-    setTimeout(() => $('gamePlayerIframe').src = src, 50);
-  };
+  $('toolPlayerReload').onclick = () => $('toolPlayerIframe').src = $('toolPlayerIframe').src;
 
-  $('gamePlayerEmbed').onclick = () => {
+  $('toolPlayerEmbed').onclick = () => {
     $('embedModal').classList.add('active');
     $('embedCode').value = '<iframe src="' + GAME_BASE + '/' + currentGameUrl + '/" width="100%" height="600" frameborder="0" allowfullscreen></iframe>';
   };
 
-  $('gamePlayerIframe').onload = () => setTimeout(() => $('gamePlayerLoading').classList.add('hidden'), 500);
+  $('toolPlayerIframe').onload = () => setTimeout(() => $('toolPlayerLoading').classList.add('hidden'), 500);
 
-  $('gamesBack').onclick = () => {
-    $('gamesIframeContainer').style.display = 'none';
-    $('secondGamesContainer').style.display = 'none';
-    $('gamesHeader').style.display = 'none';
-    $('gamesMenu').style.display = 'flex';
-    $('gamesBack').style.display = 'none';
-    $('gamesReload').style.display = 'none';
-    $('gamesIframe').src = '';
+  $('toolsBack').onclick = () => {
+    $('toolsIframeContainer').style.display = 'none';
+    $('secondToolsContainer').style.display = 'none';
+    $('toolsHeader').style.display = 'none';
+    $('toolsMenu').style.display = 'flex';
+    $('toolsBack').style.display = 'none';
+    $('toolsReload').style.display = 'none';
+    $('toolsIframe').src = '';
   };
 
-  $('gamesReload').onclick = () => {
-    var src = $('gamesIframe').src;
-    $('gamesIframe').src = '';
-    setTimeout(() => $('gamesIframe').src = src, 50);
-  };
+  $('toolsReload').onclick = () => $('toolsIframe').src = $('toolsIframe').src;
 }
 
-function renderGames() {
-  $('gamesGrid').innerHTML = gamesData.map(function(g) {
+function renderTools() {
+  $('toolsGrid').innerHTML = gamesData.map(function(g) {
     return '<div class="game-card" data-url="' + g.url + '" data-name="' + g.name + '">' +
       '<img src="' + GAME_BASE + '/' + g.url + '/' + g.image + '" alt="' + g.name + '" loading="lazy" onerror="this.style.display=\'none\'">' +
       '<p>' + g.name + '</p></div>';
@@ -628,11 +527,11 @@ function renderGames() {
   $all('.game-card').forEach(function(card) {
     card.onclick = function() {
       currentGameUrl = card.dataset.url;
-      $('gamePlayerTitle').textContent = card.dataset.name;
-      $('secondGamesContainer').style.display = 'none';
-      $('gamePlayerView').classList.add('active');
-      $('gamePlayerLoading').classList.remove('hidden');
-      $('gamePlayerIframe').src = GAME_BASE + '/' + currentGameUrl + '/';
+      $('toolPlayerTitle').textContent = card.dataset.name;
+      $('secondToolsContainer').style.display = 'none';
+      $('toolPlayerView').classList.add('active');
+      $('toolPlayerLoading').classList.remove('hidden');
+      $('toolPlayerIframe').src = GAME_BASE + '/' + currentGameUrl + '/';
     };
   });
 }
@@ -640,7 +539,7 @@ function renderGames() {
 function initNav() {
   function show(page) {
     $('homePage').style.display = 'none';
-    $('gamesPage').classList.remove('active');
+    $('toolsPage').classList.remove('active');
     $('mediaPage').classList.remove('active');
     $('chatPage').classList.remove('active');
     $('partnersPage').classList.remove('active');
@@ -650,18 +549,18 @@ function initNav() {
     if (page === 'home') {
       $('homePage').style.display = 'flex';
       $('homeLink').classList.add('active');
-    } else if (page === 'games') {
-      $('gamesPage').classList.add('active');
-      $('gamesLink').classList.add('active');
-      $('gamesMenu').style.display = 'flex';
-      $('gamesHeader').style.display = 'none';
-      $('gamesIframeContainer').style.display = 'none';
-      $('secondGamesContainer').style.display = 'none';
-      $('gamePlayerView').classList.remove('active');
+    } else if (page === 'tools') {
+      $('toolsPage').classList.add('active');
+      $('toolsLink').classList.add('active');
+      $('toolsMenu').style.display = 'flex';
+      $('toolsHeader').style.display = 'none';
+      $('toolsIframeContainer').style.display = 'none';
+      $('secondToolsContainer').style.display = 'none';
+      $('toolPlayerView').classList.remove('active');
     } else if (page === 'media') {
       $('mediaPage').classList.add('active');
       $('mediaLink').classList.add('active');
-      if (!$('mediaIframe').src) $('mediaIframe').src = MEDIA_URL;
+      $('mediaIframe').src = MEDIA_URL;
     } else if (page === 'chat') {
       $('chatPage').classList.add('active');
       $('chatLink').classList.add('active');
@@ -675,13 +574,13 @@ function initNav() {
   }
 
   $('homeLink').onclick = function() { show('home'); };
-  $('gamesLink').onclick = function() { show('games'); };
+  $('toolsLink').onclick = function() { show('tools'); };
   $('mediaLink').onclick = function() { show('media'); };
   $('chatLink').onclick = function() { show('chat'); };
   $('partnersLink').onclick = function() { show('partners'); };
   $('settingsLink').onclick = function() { show('settings'); };
 
-  $('gamesHome').onclick = function() { show('home'); };
+  $('toolsHome').onclick = function() { show('home'); };
   $('mediaHome').onclick = function() { show('home'); };
   $('chatHome').onclick = function() { show('home'); };
   $('partnersBack').onclick = function() { show('home'); };
@@ -711,10 +610,10 @@ function initNav() {
 function initKeys() {
   document.onkeydown = function(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key.toLowerCase() === 'g') $('gamesLink').click();
+    if (e.key.toLowerCase() === 'a') $('toolsLink').click();
     if (e.key.toLowerCase() === 'm') $('mediaLink').click();
     if (e.key.toLowerCase() === 'h') $('homeLink').click();
-    if (e.key.toLowerCase() === 'p') triggerPanic();
+    if (e.key.toLowerCase() === 'p') triggerExit();
   };
 }
 
