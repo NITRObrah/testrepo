@@ -1479,6 +1479,85 @@ a:hover {
   transition: all 0.25s ease;
 }
 
+.data-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.data-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03);
+  color: var(--fg);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  width: 100%;
+}
+
+.data-btn:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.data-btn i {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.data-btn-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.data-btn-desc {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.data-btn-danger {
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.data-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.data-btn-danger i {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.data-btn-danger .data-btn-title {
+  color: #ef4444;
+}
+
+.data-modal-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
 .modal-overlay.active {
   opacity: 1;
   visibility: visible;
