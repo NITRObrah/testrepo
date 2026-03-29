@@ -456,6 +456,98 @@ function initSettings() {
       $('privacyContent').style.display = tab.dataset.tab === 'privacy' ? 'block' : 'none';
     };
   });
+
+  // Data management
+  $('saveDataBtn').onclick = () => {
+    var data = {};
+    try { for (var i = 0; i < localStorage.length; i++) { var key = localStorage.key(i); data[key] = localStorage.getItem(key); } } catch(e) {}
+    var json = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(json).then(() => {
+      $('saveDataBtn').querySelector('.data-btn-title').textContent = 'Copied to Clipboard!';
+      $('saveDataBtn').querySelector('.data-btn-desc').textContent = 'Save this text somewhere safe';
+      setTimeout(() => {
+        $('saveDataBtn').querySelector('.data-btn-title').textContent = 'Save Data';
+        $('saveDataBtn').querySelector('.data-btn-desc').textContent = 'Export current settings';
+      }, 2500);
+    }).catch(() => {
+      $('dataModal').classList.add('active');
+      $('dataImportArea').value = json;
+      $('dataModal').querySelector('.modal-title').innerHTML = '<i class="fas fa-download"></i> Saved Data';
+      $('dataModalDesc').textContent = 'Copy the text below and save it somewhere safe.';
+      $('dataImportArea').readOnly = true;
+      $('dataImportBtn').textContent = 'Copy to Clipboard';
+      $('dataImportBtn').onclick = () => {
+        navigator.clipboard.writeText($('dataImportArea').value);
+        $('dataImportBtn').textContent = 'Copied!';
+        setTimeout(() => {
+          $('dataImportBtn').textContent = 'Copy to Clipboard';
+          $('dataModal').classList.remove('active');
+          $('dataImportArea').value = '';
+          $('dataImportArea').readOnly = false;
+        }, 1500);
+      };
+    });
+  };
+
+  $('loadDataBtn').onclick = () => {
+    $('dataModal').classList.add('active');
+    $('dataImportArea').value = '';
+    $('dataImportArea').readOnly = false;
+    $('dataModal').querySelector('.modal-title').innerHTML = '<i class="fas fa-upload"></i> Load Data';
+    $('dataModalDesc').textContent = 'Paste your saved data below to restore settings.';
+    $('dataImportBtn').textContent = 'Restore Data';
+    $('dataImportBtn').onclick = () => {
+      var text = $('dataImportArea').value.trim();
+      if (!text) return;
+      try {
+        var data = JSON.parse(text);
+        Object.keys(data).forEach(function(key) { store.set(key, data[key]); });
+        $('dataImportBtn').textContent = 'Restored!';
+        $('dataImportBtn').style.background = '#10b981';
+        setTimeout(() => {
+          $('dataImportBtn').textContent = 'Restore Data';
+          $('dataImportBtn').style.background = '';
+          $('dataModal').classList.remove('active');
+          location.reload();
+        }, 1200);
+      } catch(e) {
+        $('dataImportBtn').textContent = 'Invalid data';
+        $('dataImportBtn').style.background = '#ef4444';
+        setTimeout(() => {
+          $('dataImportBtn').textContent = 'Restore Data';
+          $('dataImportBtn').style.background = '';
+        }, 1500);
+      }
+    };
+  };
+
+  $('wipeDataBtn').onclick = () => {
+    var btn = $('wipeDataBtn');
+    if (btn.dataset.confirming === 'true') {
+      localStorage.clear();
+      btn.dataset.confirming = 'false';
+      btn.querySelector('.data-btn-title').textContent = 'Wipe Data';
+      btn.querySelector('.data-btn-desc').textContent = 'Clear all memory';
+      btn.style.borderColor = '';
+      btn.style.background = '';
+      setTimeout(() => location.reload(), 400);
+    } else {
+      btn.dataset.confirming = 'true';
+      btn.querySelector('.data-btn-title').textContent = 'Click again to confirm';
+      btn.querySelector('.data-btn-desc').textContent = 'This will erase everything';
+      btn.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+      btn.style.background = 'rgba(239, 68, 68, 0.08)';
+      setTimeout(() => {
+        btn.dataset.confirming = 'false';
+        btn.querySelector('.data-btn-title').textContent = 'Wipe Data';
+        btn.querySelector('.data-btn-desc').textContent = 'Clear all memory';
+        btn.style.borderColor = '';
+        btn.style.background = '';
+      }, 3000);
+    }
+  };
+
+  $('dataModalClose').onclick = () => $('dataModal').classList.remove('active');
 }
 
 function triggerExit() {
