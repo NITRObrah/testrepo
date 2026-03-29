@@ -511,6 +511,42 @@ a:hover {
   font-size: 15px;
 }
 
+.discord-join {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: rgba(255,255,255,0.03);
+  text-decoration: none;
+  font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease;
+  margin-top: 4px;
+}
+
+.discord-join i {
+  width: 18px;
+  font-size: 16px;
+  color: #888;
+  filter: grayscale(100%);
+  transition: filter 0.15s ease;
+}
+
+.discord-join:hover {
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+}
+
+.discord-join:hover i {
+  filter: grayscale(0%);
+  color: #5865F2;
+}
+
 /* Main Content */
 .main-wrapper {
   flex: 1;
