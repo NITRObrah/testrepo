@@ -106,7 +106,9 @@ html, body {
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
+  background-color: #0a0a0f;
   color: var(--fg);
+  color: #ffffff;
   line-height: 1.5;
   overflow: hidden;
 }
@@ -116,6 +118,7 @@ body {
   outline-offset: 2px;
 }
 
+/* Base Button Styles */
 button {
   font-family: 'Inter', sans-serif;
   cursor: pointer;
@@ -128,7 +131,7 @@ button {
 }
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 a {
@@ -139,6 +142,47 @@ a {
 
 a:hover {
   color: var(--fg);
+}
+
+/* Button hover - subtle glow + grow effect */
+.game-card:hover,
+.games-option:hover,
+.cloak-btn:hover,
+.bypass-btn:hover,
+.partner-card:hover,
+.theme-btn:hover,
+.legal-tab:hover {
+  outline: 1px solid rgba(255,255,255,0.08);
+  outline-offset: 1px;
+  transition: transform 0.2s ease, outline 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(255,255,255,0.04);
+  color: var(--fg);
+}
+
+.nav-link.active {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Specific grow intensities */
+.game-card:hover {
+  transform: translateY(-2px);
+}
+
+.games-option:hover {
+  transform: translateY(-2px);
+}
+
+.partner-card:hover {
+  transform: translateY(-2px);
+}
+
+.bypass-btn.panic:hover {
+  outline-color: var(--danger);
 }
 
 /* Loading Screen */
@@ -165,6 +209,7 @@ a:hover {
   height: 72px;
   border-radius: 20px;
   margin-bottom: 20px;
+  opacity: 0.9;
 }
 
 .loading-title {
@@ -172,7 +217,7 @@ a:hover {
   font-weight: 700;
   letter-spacing: -0.5px;
   margin-bottom: 18px;
-  color: #fff;
+  color: #bbb;
 }
 
 .loading-bar-container {
@@ -201,8 +246,8 @@ a:hover {
   color: var(--muted);
 }
 
-/* Panic Overlay */
-.panic-overlay {
+/* Exit Overlay */
+.exit-overlay {
   position: fixed;
   inset: 0;
   background: var(--bg);
@@ -213,17 +258,17 @@ a:hover {
   flex-direction: column;
 }
 
-.panic-overlay.active {
+.exit-overlay.active {
   display: flex;
 }
 
-.panic-overlay i {
+.exit-overlay i {
   font-size: 64px;
   color: var(--accent);
   margin-bottom: 20px;
 }
 
-.panic-overlay span {
+.exit-overlay span {
   font-size: 24px;
   font-weight: 700;
 }
@@ -267,11 +312,12 @@ a:hover {
   display: flex;
   height: 100vh;
   position: relative;
-  background: var(--bg);
+  background: #0a0a0f;
 }
 
 /* Sidebar */
 .sidebar {
+  width: var(--sidebar-width);
   width: 240px;
   background: rgba(14, 14, 22, 0.95);
   backdrop-filter: var(--blur-sidebar);
@@ -325,7 +371,7 @@ a:hover {
   justify-content: center;
   font-size: 14px;
   font-family: inherit;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, outline 0.2s ease;
 }
 
 .sidebar-close-btn:hover,
@@ -418,17 +464,6 @@ a:hover {
   position: relative;
 }
 
-.nav-link:hover {
-  background: rgba(255,255,255,0.04);
-  color: var(--fg);
-}
-
-.nav-link.active {
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  font-weight: 600;
-}
-
 .nav-link.active::before {
   content: '';
   position: absolute;
@@ -468,12 +503,7 @@ a:hover {
   width: 100%;
   text-align: left;
   font-family: inherit;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.footer-link:hover {
-  background: rgba(255,255,255,0.04);
-  color: var(--fg);
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .footer-link i {
@@ -481,38 +511,10 @@ a:hover {
   font-size: 15px;
 }
 
-.discord-join {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  color: #5865F2;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  background: rgba(88, 101, 242, 0.08);
-  text-decoration: none;
-  font-family: inherit;
-  transition: background 0.15s ease, color 0.15s ease;
-  margin-top: 4px;
-}
-
-.discord-join i {
-  width: 18px;
-  font-size: 16px;
-  color: #5865F2;
-}
-
-.discord-join:hover {
-  background: rgba(88, 101, 242, 0.15);
-  color: #5865F2;
-}
-
 /* Main Content */
 .main-wrapper {
   flex: 1;
+  margin-left: var(--sidebar-width);
   margin-left: 240px;
   display: flex;
   flex-direction: column;
@@ -532,7 +534,7 @@ a:hover {
   justify-content: center;
   align-items: center;
   padding: 40px;
-  background: var(--bg);
+  background: #0a0a0f;
 }
 
 .main-header {
@@ -545,7 +547,8 @@ a:hover {
   font-weight: 800;
   letter-spacing: -2px;
   margin-bottom: 10px;
-  color: var(--fg);
+  color: #ffffff;
+  position: relative;
 }
 
 .main-subtitle {
@@ -738,7 +741,7 @@ a:hover {
     radial-gradient(1.5px 1.5px at 160px 120px, #fff, transparent),
     radial-gradient(1px 1px at 220px 150px, #fff, transparent),
     radial-gradient(1.5px 1.5px at 300px 30px, #fff, transparent);
-  background-color: var(--bg);
+  background-color: #0a0a12;
   background-repeat: repeat;
   background-size: 400px 300px;
   z-index: 0;
@@ -756,12 +759,11 @@ a:hover {
   text-align: center;
   position: relative;
   z-index: 1;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s ease, border-color 0.2s ease;
 }
 
 .games-option:hover {
   border-color: var(--accent);
-  transform: translateY(-3px);
 }
 
 .games-option i {
@@ -806,7 +808,7 @@ a:hover {
 .second-games-header {
   position: fixed;
   top: 0;
-  left: 240px;
+  left: var(--sidebar-width);
   right: 0;
   padding: 16px 24px;
   background: var(--bg);
@@ -855,12 +857,11 @@ a:hover {
   border-radius: 12px;
   border: 1px solid var(--glass-border);
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s ease, border-color 0.2s ease;
 }
 
 .game-card:hover {
   border-color: var(--accent);
-  transform: translateY(-3px);
 }
 
 .game-card img {
@@ -1101,12 +1102,11 @@ a:hover {
   text-align: center;
   text-decoration: none;
   color: var(--fg);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.3s ease, border-color 0.2s ease;
 }
 
 .partner-card:hover {
   border-color: var(--accent);
-  transform: translateY(-3px);
 }
 
 .partner-logo-wrap {
@@ -1229,10 +1229,6 @@ a:hover {
   position: relative;
 }
 
-.theme-btn:hover {
-  transform: scale(1.05);
-}
-
 .theme-btn.active {
   border-color: var(--accent);
 }
@@ -1282,7 +1278,7 @@ a:hover {
   position: relative;
   flex-shrink: 0;
   border: none;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .toggle-switch.on {
@@ -1333,14 +1329,14 @@ a:hover {
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.cloak-btn:hover {
-  transform: scale(1.05);
-}
-
 .cloak-btn.active {
   border-color: var(--accent);
   background: var(--accent-dim);
   color: var(--accent);
+}
+
+.cloak-btn.active:hover {
+  transform: scale(1.05);
 }
 
 .cloak-btn img {
@@ -1378,25 +1374,47 @@ a:hover {
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.bypass-btn:hover {
-  transform: translateY(-2px);
-}
-
 .bypass-btn i {
   font-size: 24px;
   color: var(--accent);
 }
 
-.bypass-btn.panic {
-  border-color: rgba(239, 68, 68, 0.3);
+.bypass-btn.exit-btn {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.bypass-btn.panic i {
-  color: #ef4444;
+.bypass-btn.exit-btn i {
+  color: var(--accent);
 }
 
-.bypass-btn.panic:hover {
-  border-color: #ef4444;
+.tools-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tools-menu::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, #fff, transparent),
+    radial-gradient(1px 1px at 220px 150px, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 300px 30px, #fff, transparent);
+  background-color: #0a0a12;
+  background-repeat: repeat;
+  background-size: 400px 300px;
+  z-index: 0;
 }
 
 .badge-rec {
@@ -1423,85 +1441,6 @@ a:hover {
   opacity: 0;
   visibility: hidden;
   transition: all 0.25s ease;
-}
-
-.data-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.data-btn {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.05);
-  background: rgba(255,255,255,0.03);
-  color: var(--fg);
-  cursor: pointer;
-  font-family: inherit;
-  text-align: left;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  width: 100%;
-}
-
-.data-btn:hover {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.1);
-}
-
-.data-btn i {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: var(--muted);
-  flex-shrink: 0;
-}
-
-.data-btn-title {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--fg);
-}
-
-.data-btn-desc {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-.data-btn-danger {
-  border-color: rgba(239, 68, 68, 0.15);
-}
-
-.data-btn-danger:hover {
-  background: rgba(239, 68, 68, 0.08);
-  border-color: rgba(239, 68, 68, 0.25);
-}
-
-.data-btn-danger i {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-}
-
-.data-btn-danger .data-btn-title {
-  color: #ef4444;
-}
-
-.data-modal-desc {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 12px;
-  line-height: 1.5;
 }
 
 .modal-overlay.active {
@@ -1560,7 +1499,7 @@ a:hover {
   justify-content: center;
   font-family: inherit;
   font-size: 14px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .modal-close:hover {
@@ -1631,12 +1570,16 @@ a:hover {
   border-radius: 8px;
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .legal-tab.active {
   background: var(--accent);
   color: #fff;
+}
+
+.legal-tab.active:hover {
+  transform: scale(1.02);
 }
 
 .legal-content {
@@ -1736,9 +1679,6 @@ a:hover {
   }
   .kbd-hint {
     display: none;
-  }
-  .second-games-header {
-    left: 0;
   }
 }
 
